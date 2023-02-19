@@ -1,0 +1,242 @@
+:root {
+    --black: white;
+    --dark: #f1f1f8;
+    --light: #171717;
+}
+
+::-moz-selection {
+    background: #DE1F32;
+    color: #f1f1f8;
+}
+
+::selection {
+    background: #DE1F32;
+    color: #f1f1f8;
+}
+
+::-webkit-scrollbar {
+    display: none;
+}
+
+body {
+    background-color: var(--dark);
+    margin: 0;
+    padding: 0;
+    width: 100vw;
+    height: fit-content;
+    overflow-x: hidden;
+    scrollbar-width: thin !important;
+}
+
+.erreurs {
+    width: calc(90vw - 18px);
+    user-select: all;
+    border: none;
+    margin: 0 auto;
+}
+
+a,
+p,
+span,
+h1,
+table,
+form,
+input,
+textarea,
+div,
+td,
+tr,
+th,
+article {
+    color: var(--light);
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    font-size: 1.1em;
+}
+
+h1 {
+    text-align: center;
+    font-size: 2em !important;
+    margin-bottom: 100px;
+}
+
+h3 {
+    font-style: italic;
+    margin-left: 25px;
+    font-size: 1.2em !important;
+}
+
+article {
+    color: var(--light) !important;
+    width: 90vw;
+    margin: 25px auto;
+    margin-bottom: 100px;
+    text-align: justify;
+    padding: 1vw;
+    border-left: 4px solid var(--light);
+    transform: translateX(calc(-0.5vw - 4px));
+}
+
+article p {
+    color: var(--light) !important;
+    padding-left: 9px !important;
+    border-left: 2px solid var(--light) !important;
+}
+
+h2 {
+    text-align: left !important;
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif !important;
+    font-size: 1.4em !important;
+    color: var(--light) !important;
+    text-decoration: underline;
+}
+
+form {
+    padding: 9px;
+    border-radius: 9px;
+    box-shadow: 0 0 1em var(--black);
+    border: none;
+    margin: 50px auto;
+    width: fit-content;
+    max-width: 90vw;
+}
+
+tr:first-child {
+    border-top: 4px solid var(--black);
+}
+
+tr,
+fieldset {
+    border: none;
+}
+
+fieldset {
+    display: grid;
+    text-align: justify;
+    line-height: 180%;
+}
+
+fieldset label {
+    font-size: 1.4em;
+    font-weight: bold;
+    line-height: 150%;
+    border-left: 4px solid var(--light);
+    padding-left: 7px;
+    margin: 25px 0;
+}
+
+tr {
+    border-bottom: 4px solid var(--black);
+}
+
+td {
+    padding: 17px;
+}
+
+button {
+    height: 57px;
+    width: 57px;
+    padding: 14px;
+    border-radius: 14px;
+    border: none;
+    color: #f1f1f8;
+    box-shadow: 0 0 1em var(--black);
+    margin: 0 4px;
+    font-size: 1.1em;
+    transition: transform .3s, filter .3s;
+}
+
+.red {
+    background-color: #DE1F32;
+}
+
+.blue {
+    background-color: darkslateblue;
+}
+
+.green {
+    background-color: green;
+}
+
+.purple {
+    background-color: purple;
+}
+
+button:hover {
+    filter: brightness(.9);
+    transform: scale(.9);
+}
+
+button:hover,
+button:focus,
+button:active,
+button:target {
+    cursor: pointer;
+}
+
+button:focus,
+button:active,
+button:target {
+    filter: brightness(.7);
+    transform: scale(.8);
+}
+
+.date {
+    font-size: 1em !important;
+    font-family: 'Courier New', Courier, monospace !important;
+    user-select: all !important;
+}
+
+input,
+textarea {
+    background-color: var(--black) !important;
+    color: var(--light) !important;
+    padding: 9px !important;
+    border: 2px solid transparent !important;
+    width: 500px !important;
+    max-width: 95vw !important;
+    margin-bottom: 25px !important;
+    resize: none !important;
+}
+
+input:active,
+input:target,
+input:focus {
+    background-color: var(--dark) !important;
+    border-bottom: 2px solid #DE1F32 !important;
+}
+
+textarea {
+    height: 555px !important;
+}
+
+textarea:active,
+textarea:target,
+textarea:focus {
+    background-color: var(--dark) !important;
+    border-left: 2px solid #DE1F32 !important;
+}
+
+input:active,
+input:target,
+input:focus,
+textarea:active,
+textarea:target,
+textarea:focus,
+button:active,
+button:target,
+button:focus {
+    outline: none;
+}
+
+#mode {
+    position: fixed;
+    top: 17px;
+    right: 17px;
+    color: gold !important;
+    box-shadow: 0 0 1em gold !important;
+    background-color: transparent !important;
+}
+
+#cke_texte {
+    transition: all.4s;
+}
