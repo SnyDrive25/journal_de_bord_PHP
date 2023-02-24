@@ -230,13 +230,67 @@ button:focus {
 
 #mode {
     position: fixed;
+    z-index: 999 !important;
     top: 17px;
     right: 17px;
     color: gold !important;
     box-shadow: 0 0 1em gold !important;
-    background-color: transparent !important;
+    background-color: var(--dark) !important;
+}
+
+.myadmin {
+    position: fixed;
+    z-index: 999 !important;
+    top: 17px;
+    left: 17px;
+    border: none;
+    width: fit-content !important;
+    min-width: fit-content !important;
+    color: var(--light);
+    background-color: var(--dark) !important;
+    text-decoration: none;
+    text-transform: capitalize;
+}
+
+.myadmin:hover {
+    text-decoration: underline;
 }
 
 #cke_texte {
     transition: all.4s;
+}
+
+.public_article {
+    width: 94vw !important;
+    border: none !important;
+    padding-left: 3vw !important;
+    padding-right: 3vw !important;
+}
+
+.public_article:nth-child(odd) {
+    box-shadow: 0 0 .81em inset rgb(0, 0, 0, .7) !important;
+}
+
+.languages {
+    width: fit-content;
+    gap: 30px;
+    margin: 0 auto;
+    margin-bottom: 50px;
+}
+
+.languages a {
+    text-decoration: none;
+    font-size: 1.4em;
+    font-weight: bold;
+    margin: 0 17px;
+    padding: .5em;
+    text-transform: uppercase;
+    background-color: var(--light);
+    color: var(--dark);
+    border-radius: 1.5em;
+    transition: all.2s;
+}
+
+.languages a:hover {
+    border-radius: 9px !important;
 }

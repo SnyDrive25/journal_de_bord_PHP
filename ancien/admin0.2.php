@@ -112,46 +112,42 @@ if ("dspadd" == $op) {
     }
     else {
 
-        if(strlen($titre) < 250 && strlen($texte) < 2500 && strlen($titre_en) < 250 && strlen($texte_en) < 2500) {
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, 'https://api-free.deepl.com/v2/translate');
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, "auth_key=80886b71-0cc3-08fd-7cc0-6663d484b5e7:fx&text=" . urlencode($titre) . "&target_lang=en");
+        $headers = array();
+        $headers[] = 'Content-Type: application/x-www-form-urlencoded';
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+        $titre_en = curl_exec($ch);
+        if (preg_match('/"text":"([^"]+)"/', $titre_en, $matches)) {
+            $titre_en = $matches[1];
+        }
 
-            $ch = curl_init();
-            curl_setopt($ch, CURLOPT_URL, 'https://api-free.deepl.com/v2/translate');
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-            curl_setopt($ch, CURLOPT_POST, 1);
-            curl_setopt($ch, CURLOPT_POSTFIELDS, "auth_key=" . urlencode($api) . "&text=" . urlencode($titre) . "&target_lang=en");
-            $headers = array();
-            $headers[] = 'Content-Type: application/x-www-form-urlencoded';
-            curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-            $titre_en = curl_exec($ch);
-            if (preg_match('/"text":"([^"]+)"/', $titre_en, $matches)) {
-                $titre_en = $matches[1];
-            }
+        $ch2 = curl_init();
+        curl_setopt($ch2, CURLOPT_URL, 'https://api-free.deepl.com/v2/translate');
+        curl_setopt($ch2, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch2, CURLOPT_POST, 1);
+        curl_setopt($ch2, CURLOPT_POSTFIELDS, "auth_key=80886b71-0cc3-08fd-7cc0-6663d484b5e7:fx&text=" . urlencode($texte) . "&target_lang=en");
+        $headers = array();
+        $headers[] = 'Content-Type: application/x-www-form-urlencoded';
+        curl_setopt($ch2, CURLOPT_HTTPHEADER, $headers);
+        $texte_en = curl_exec($ch2);
+        if (preg_match('/"text":"([^"]+)"/', $texte_en, $matches2)) {
+            $texte_en = $matches2[1];
+        }
+        
+        if (curl_errno($ch)) {
+            echo 'Error:' . curl_error($ch);
+        }
+        curl_close($ch);
 
-            $ch2 = curl_init();
-            curl_setopt($ch2, CURLOPT_URL, 'https://api-free.deepl.com/v2/translate');
-            curl_setopt($ch2, CURLOPT_RETURNTRANSFER, 1);
-            curl_setopt($ch2, CURLOPT_POST, 1);
-            curl_setopt($ch2, CURLOPT_POSTFIELDS, "auth_key=" . urlencode($api) . "&text=" . urlencode($texte) . "&target_lang=en");
-            $headers = array();
-            $headers[] = 'Content-Type: application/x-www-form-urlencoded';
-            curl_setopt($ch2, CURLOPT_HTTPHEADER, $headers);
-            $texte_en = curl_exec($ch2);
-            if (preg_match('/"text":"([^"]+)"/', $texte_en, $matches2)) {
-                $texte_en = $matches2[1];
-            }
-            
-            if (curl_errno($ch)) {
-                echo 'Error:' . curl_error($ch);
-            }
-            curl_close($ch);
+        $id = (isset($_POST["id"]) ? intval($_POST["id"]) : -1);
 
-            $id = (isset($_POST["id"]) ? intval($_POST["id"]) : -1);
-
-            if(empty($erreurs)) {
-                $qry = $pdo->prepare("update journal set titre_en=:tien, texte_en=:teen, timestamp_update=:ts where id=:id");
-                $qry->execute(array(":id" => $id, ":tien" => $titre_en, ":teen" => $texte_en, ":ts" => time()));
-            }
-
+        if(empty($erreurs)) {
+            $qry = $pdo->prepare("update journal set titre_en=:tien, texte_en=:teen, timestamp_update=:ts where id=:id");
+            $qry->execute(array(":id" => $id, ":tien" => $titre_en, ":teen" => $texte_en, ":ts" => time()));
         }
 
         $op = "dsp";
@@ -253,17 +249,9 @@ if ("dspadd" == $op) {
                 while (false !== ($rec = $qry->fetch(PDO::FETCH_OBJ))) {
             ?>
             <tr>
-                <td class="date">
-                    <?php print(date("d-m-Y", $rec->timestamp_update)); ?>
-                </td>
+                <td class="date"><?php print(date("d-m-Y", $rec->timestamp_update)); ?></td>
                 <td>
-                    <?php 
-                        $espace = "";
-                        if(strlen(htmlentities($rec->titre)) > 35) {
-                            $espace = "[...]";
-                        }
-                        print(substr(htmlentities($rec->titre), 0, 35) . $espace);
-                    ?>
+                    <?php print(htmlentities($rec->titre)); ?>
                 </td>
                 <td>
                     <?php print($rec->id); ?>

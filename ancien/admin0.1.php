@@ -112,46 +112,95 @@ if ("dspadd" == $op) {
     }
     else {
 
-        if(strlen($titre) < 250 && strlen($texte) < 2500 && strlen($titre_en) < 250 && strlen($texte_en) < 2500) {
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, 'http://esilv.olfsoftware.fr:8080/v2/translate');
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, "auth_key=80886b71-0cc3-08fd-7cc0-6663d484b5e7:fx&text=" . urlencode($titre) . "&target_lang=en");
+        $headers = array();
+        $headers[] = 'Content-Type: application/x-www-form-urlencoded';
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+        $titre_en = curl_exec($ch);
+        if (preg_match('/"text":"([^"]+)"/', $titre_en, $matches)) {
+            $titre_en = $matches[1];
+        }
 
-            $ch = curl_init();
-            curl_setopt($ch, CURLOPT_URL, 'https://api-free.deepl.com/v2/translate');
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-            curl_setopt($ch, CURLOPT_POST, 1);
-            curl_setopt($ch, CURLOPT_POSTFIELDS, "auth_key=" . urlencode($api) . "&text=" . urlencode($titre) . "&target_lang=en");
-            $headers = array();
-            $headers[] = 'Content-Type: application/x-www-form-urlencoded';
-            curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-            $titre_en = curl_exec($ch);
-            if (preg_match('/"text":"([^"]+)"/', $titre_en, $matches)) {
-                $titre_en = $matches[1];
-            }
+        $ch2 = curl_init();
+        curl_setopt($ch2, CURLOPT_URL, 'http://esilv.olfsoftware.fr:8080/v2/translate');
+        curl_setopt($ch2, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch2, CURLOPT_POST, 1);
+        curl_setopt($ch2, CURLOPT_POSTFIELDS, "auth_key=80886b71-0cc3-08fd-7cc0-6663d484b5e7:fx&text=" . urlencode($texte) . "&target_lang=en");
+        $headers = array();
+        $headers[] = 'Content-Type: application/x-www-form-urlencoded';
+        curl_setopt($ch2, CURLOPT_HTTPHEADER, $headers);
+        $texte_en = curl_exec($ch2);
+        if (preg_match('/"text":"([^"]+)"/', $texte_en, $matches2)) {
+            $texte_en = $matches2[1];
+        }
+        
+        if (curl_errno($ch)) {
+            echo 'Error:' . curl_error($ch);
+        }
+        curl_close($ch);
 
-            $ch2 = curl_init();
-            curl_setopt($ch2, CURLOPT_URL, 'https://api-free.deepl.com/v2/translate');
-            curl_setopt($ch2, CURLOPT_RETURNTRANSFER, 1);
-            curl_setopt($ch2, CURLOPT_POST, 1);
-            curl_setopt($ch2, CURLOPT_POSTFIELDS, "auth_key=" . urlencode($api) . "&text=" . urlencode($texte) . "&target_lang=en");
-            $headers = array();
-            $headers[] = 'Content-Type: application/x-www-form-urlencoded';
-            curl_setopt($ch2, CURLOPT_HTTPHEADER, $headers);
-            $texte_en = curl_exec($ch2);
-            if (preg_match('/"text":"([^"]+)"/', $texte_en, $matches2)) {
-                $texte_en = $matches2[1];
-            }
-            
-            if (curl_errno($ch)) {
-                echo 'Error:' . curl_error($ch);
-            }
-            curl_close($ch);
+        $id = (isset($_POST["id"]) ? intval($_POST["id"]) : -1);
 
-            $id = (isset($_POST["id"]) ? intval($_POST["id"]) : -1);
+        if(empty($erreurs)) {
+            $qry = $pdo->prepare("update journal set titre_en=:tien, texte_en=:teen, timestamp_update=:ts where id=:id");
+            $qry->execute(array(":id" => $id, ":tien" => $titre_en, ":teen" => $texte_en, ":ts" => time()));
+        }
 
-            if(empty($erreurs)) {
-                $qry = $pdo->prepare("update journal set titre_en=:tien, texte_en=:teen, timestamp_update=:ts where id=:id");
-                $qry->execute(array(":id" => $id, ":tien" => $titre_en, ":teen" => $texte_en, ":ts" => time()));
-            }
+        $op = "dsp";
+    
+    }
 
+} else if("tradd" == $op) {
+ 
+    $titre = (isset($_POST["titre"]) ? strip_tags(trim($_POST["titre"])) : "");
+    $texte = (isset($_POST["texte"]) ? strip_tags(trim($_POST["texte"])) : "");
+
+    if($titre == "" || $texte == "") {
+        echo '<script>alert("Please fill the inputs")</script>';
+        exit;
+    }
+    else {
+
+        $ch1 = curl_init();
+        curl_setopt($ch1, CURLOPT_URL, 'http://esilv.olfsoftware.fr:8080/v2/translate');
+        curl_setopt($ch1, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch1, CURLOPT_POST, 1);
+        curl_setopt($ch1, CURLOPT_POSTFIELDS, "auth_key=80886b71-0cc3-08fd-7cc0-6663d484b5e7:fx&text=" . urlencode($titre) . "&target_lang=en");
+        $headers = array();
+        $headers[] = 'Content-Type: application/x-www-form-urlencoded';
+        curl_setopt($ch1, CURLOPT_HTTPHEADER, $headers);
+        $titre_en = curl_exec($ch1);
+        if (preg_match('/"text":"([^"]+)"/', $titre_en, $matches)) {
+            $titre_en = $matches[1];
+        }
+
+        $ch3 = curl_init();
+        curl_setopt($ch3, CURLOPT_URL, 'http://esilv.olfsoftware.fr:8080/v2/translate');
+        curl_setopt($ch3, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch3, CURLOPT_POST, 1);
+        curl_setopt($ch3, CURLOPT_POSTFIELDS, "auth_key=80886b71-0cc3-08fd-7cc0-6663d484b5e7:fx&text=" . urlencode($texte) . "&target_lang=en");
+        $headers = array();
+        $headers[] = 'Content-Type: application/x-www-form-urlencoded';
+        curl_setopt($ch3, CURLOPT_HTTPHEADER, $headers);
+        $texte_en = curl_exec($ch3);
+        if (preg_match('/"text":"([^"]+)"/', $texte_en, $matches2)) {
+            $texte_en = $matches2[1];
+        }
+        
+        if (curl_errno($ch)) {
+            echo 'Error:' . curl_error($ch);
+        }
+        curl_close($ch);
+
+        $id = (isset($_POST["id"]) ? intval($_POST["id"]) : -1);
+
+        if(empty($erreurs)) {
+            $qry = $pdo->prepare("insert into journal (titre, texte, titre_en, texte_en timestamp_create, timestamp_update) values (:ti, :te, :tien, :teen, :ts1, :ts2)");
+            $qry->execute(array(":ti" => $titre, ":te" => $texte, ":tien" => $titre_en, ":teen" => $texte_en, ":ts1" => time(), ":ts2" => time()));
         }
 
         $op = "dsp";
@@ -230,8 +279,6 @@ if ("dspadd" == $op) {
 
     <button id="mode" onclick="changeColor()"><i class="fa fa-lightbulb" aria-hidden="true"></i></button>
 
-    <a href="index.php"><button class="myadmin">Site Public</button></a>
-
     <form method="post" action="admin.php" id="frm">
         <input type="hidden" name="op" id="op" value="<?php print(isset($op) ? $op : ""); ?>">
         <input type="hidden" name="id" id="id" value="<?php print(isset($id) ? $id : -1); ?>">
@@ -253,17 +300,9 @@ if ("dspadd" == $op) {
                 while (false !== ($rec = $qry->fetch(PDO::FETCH_OBJ))) {
             ?>
             <tr>
-                <td class="date">
-                    <?php print(date("d-m-Y", $rec->timestamp_update)); ?>
-                </td>
+                <td class="date"><?php print(date("d-m-Y", $rec->timestamp_update)); ?></td>
                 <td>
-                    <?php 
-                        $espace = "";
-                        if(strlen(htmlentities($rec->titre)) > 35) {
-                            $espace = "[...]";
-                        }
-                        print(substr(htmlentities($rec->titre), 0, 35) . $espace);
-                    ?>
+                    <?php print(htmlentities($rec->titre)); ?>
                 </td>
                 <td>
                     <?php print($rec->id); ?>
@@ -296,6 +335,7 @@ if ("dspadd" == $op) {
         <div>
             <button type="button" onclick="RetourListe();" class="red" title="Return home"><i class="fa fa-chevron-left" aria-hidden="true"></i></button>
             <button type="submit" onclick="LancerOperation('add')" class="green" title="Submit"><i class="fa fa-save" aria-hidden="true"></i></button>
+            <button type="submit" onclick="Translate2()" class="blue" title="Translate"><i class="fa fa-language" aria-hidden="true"></i></button>
         </div>
         <?php
             } else if (("dspupd" == $op) || ("upd" == $op)) {
@@ -381,6 +421,10 @@ if ("dspadd" == $op) {
         }
         function Translate() {
             document.getElementById('op').value = 'tra';
+            document.getElementById('frm').submit();
+        }
+        function Translate2() {
+            document.getElementById('op').value = 'tradd';
             document.getElementById('frm').submit();
         }
     </script>

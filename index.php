@@ -2,6 +2,13 @@
 
     require_once(__DIR__ . "/db_inc.php");
 
+    if (isset($_GET['lang'])) {
+        $language = $_GET['lang'];
+    }
+    else {
+        $language = 'fr';
+    }
+
 ?>
 
 <!doctype html>
@@ -63,19 +70,42 @@ if (localStorage.getItem("mode") == null) {
 
     <button id="mode" onclick="changeColor()"><i class="fa fa-lightbulb" aria-hidden="true"></i></button>
 
+    <a href="admin.php"><button class="myadmin">Admin</button></a>
+
+    <div class="languages">
+        <a href="./index.php?lang=fr">FR</a>
+        <a href="./index.php?lang=en">EN</a>
+    </div>
+
     <?php
         $qry = $pdo->prepare("select * from journal order by timestamp_update, texte");
         $qry->execute();
         while (false !== ($rec = $qry->fetch(PDO::FETCH_OBJ))) {
     ?>
 
-    <article>
+    <article class="public_article">
 
-        <h2><?php print($rec->titre); ?></h2>
+        <h2>
+            <?php
+                if($language == "en") {
+                    print($rec->titre_en);
+                }
+                else {
+                    print($rec->titre);
+                }
+            ?>
+        </h2>
 
         <p>Date : <?php print(date("d-m-Y", $rec->timestamp_update)); ?></p>
 
-        <?php print($rec->texte); ?>
+        <?php
+                if($language == "en") {
+                    print($rec->texte_en);
+                }
+                else {
+                    print($rec->texte);
+                }
+        ?>
 
     </article>
 
